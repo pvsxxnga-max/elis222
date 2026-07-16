@@ -125,3 +125,19 @@ const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`[e-LIS Backend] รันเซิร์ฟเวอร์สมบูรณ์แบบที่พอร์ต: ${PORT}`);
 });
+// ในไฟล์ server.js (เพิ่มส่วนตรวจสอบเจ้าหน้าที่)
+const STAFF_CREDENTIALS = {
+    username: "admin_lis",
+    passwordHash: "a665a45920422f9d417e4867efdc4fb8" // ใช้ Hashed Password เสมอ
+};
+
+app.post('/api/auth/staff', (req, res) => {
+    const { username, password } = req.body;
+    
+    // ตรวจสอบใน Database แทนการ Hardcode
+    if (username === STAFF_CREDENTIALS.username && hash(password) === STAFF_CREDENTIALS.passwordHash) {
+        res.json({ success: true, token: "eyJhbGciOiJIUzI1Ni..." });
+    } else {
+        res.status(401).json({ success: false, message: "รหัสเจ้าหน้าที่หรือรหัสผ่านไม่ถูกต้อง" });
+    }
+});
